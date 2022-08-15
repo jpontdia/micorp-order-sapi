@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="post:\orders" doc:id="e2d81337-774d-4c92-a746-c5fb25d71690" >
+		<set-variable value='#[attributes.requestUri ++ "/"]' doc:name="Set Location" doc:id="ecfc3abe-1986-442f-867c-27236a95e509" variableName="location" />
+		<set-variable value="#[payload.poNumber]" doc:name="poNumber" doc:id="d7142916-d081-48e9-bdfc-152a652b5547" variableName="poNumber" />
+		<set-variable value="#[payload]" doc:name="payload backup" doc:id="7b6baa74-d9dd-43a9-b8a7-6e261d506818" variableName="payloadBackup" />
+		<flow-ref doc:name="Get Order by poNumber" doc:id="18e0e1bf-1a5d-4a86-924e-b3dcc5d47fbb" name="queryOrder"/>
+		<validation:is-true doc:name="Order not exist?" doc:id="f998f32d-6b2c-40ee-a5a0-1a2c492d9bd1" config-ref="Validation_Config" expression="#[sizeOf(payload) == 0]"/>
+		<ee:transform doc:name="Insert Payload" doc:id="3e24e41c-ea7f-4f5b-bfbd-7309091804ca" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+[
+	vars.payloadBackup mapObject ((value, key, index) -> 
+        ((key as String) ++ "__c") : value
+    )
+]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:create type="Order__c" doc:name="Create Order" doc:id="1de189cd-232e-4539-bf00-82c5b6b0d6db" config-ref="Salesforce_Config" />
+		<validation:is-true doc:name="is create success?" doc:id="c07ab925-a396-4486-90b7-16cca26230cc" expression="#[payload.successful == true]"/>
+		<ee:transform doc:name="Set Header" doc:id="4edb2256-18a6-47cc-807e-d3a5205c50eb">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="outboundHeaders"><![CDATA[%dw 2.0
+output application/java
+---
+{"Location": 
+	( (vars.location as String)
+		++ (payload.items[0].id as String)
+	)
+}]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<ee:transform doc:name="Success Message" doc:id="49db186f-e2fc-4658-ac94-f545e3be1603" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Order created successfully"
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="cbe64121-3529-4169-a575-bbc5ad729eb2" type="VALIDATION:INVALID_BOOLEAN">
+				<set-variable value="409" doc:name="status 409" doc:id="6a465ab3-873f-4e6c-ab67-a185b3525aa6" variableName="httpStatus" />
+				<ee:transform doc:name="Error Message" doc:id="aef4e4fe-d790-4f21-85e5-1a5fb2b46a54" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Order already exists"
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="0904a3dc-5f92-4d24-9dc2-740e84175da4" type="ANY">
+				<set-variable value="500" doc:name="status 500" doc:id="e0ab9fa4-8fb8-4878-b9db-f50dd3d73d14" variableName="httpStatus" />
+				<ee:transform doc:name="Error Message" doc:id="dc61f802-1a55-4f83-a7e9-4d01850e5994">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "There was a problem while trying to access the backend repository"
+}
+]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

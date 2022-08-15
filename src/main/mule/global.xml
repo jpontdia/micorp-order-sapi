@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule
+xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+		xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd 	
+	 http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd  http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+
+
+	<salesforce:sfdc-config
+		name="Salesforce_Config" 
+		doc:name="Salesforce Config">
+		<salesforce:basic-connection
+			username="${salesforce.user}"
+			password="${salesforce.password}"
+			securityToken="${salesforce.token}" />
+	</salesforce:sfdc-config>
+
+
+	<http:listener-config name="api-httpListenerConfig">
+		<http:listener-connection
+			host="0.0.0.0"
+			port="${http.port}" />
+	</http:listener-config>
+
+
+	<configuration-properties
+		doc:name="Configuration properties"
+		doc:id="0b7fca58-5e57-4dbd-a3b0-554bdefc9da9"
+		file="config.yaml" />
+		
+	<secure-properties:config
+		name="Secure_Properties_Config"
+		doc:name="Secure Properties Config"
+		file="secure-config.yaml"
+		key="${encrypt.key}" />		
+
+
+	<apikit:config
+		name="api-config"
+		api="${api.spec}"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus" />
+
+
+	<validation:config
+		name="Validation_Config"
+		doc:name="Validation Config"
+		doc:id="4af05c89-7dbf-40ea-903a-e1a0d1d7e820" />
+	
+	<global-property
+		doc:name="Global Property"
+		doc:id="20e22f16-89d2-49ab-b0b1-4cf1e8c6b7f4"
+		name="env"
+		value="local" />
+			
+	<api-gateway:autodiscovery
+		apiId="${api.id}"
+		ignoreBasePath="true"
+		doc:name="API Autodiscovery"
+		doc:id="f07765d0-bce9-4d44-9665-db88b286befe"
+		flowRef="api-main" />
+</mule>
