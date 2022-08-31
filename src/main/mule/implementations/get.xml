@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/json-logger http://www.mulesoft.org/schema/mule/json-logger/current/mule-json-logger.xsd">
 	<flow name="queryOrder" doc:id="9508f5fc-7ee2-4845-9a0d-00718f6893e3">
 		<ee:transform doc:name="Where Filter" doc:id="feb406ef-a2a3-42d4-83f4-83660648a4e1">
 			<ee:message>
@@ -73,10 +74,30 @@ output application/json
 		</error-handler>
 	</flow>
 	<flow name="get:\orders" doc:id="115eb47b-4ec0-43d9-8b29-d0730b242a39">
+		<json-logger:log-start doc:name="Log start" doc:id="fb391f4e-2186-42c3-8669-55b31d438722" config-ref="JSON_Logger_Config" message='#["Get order by poNumber=" ++ attributes.queryParams.poNumber]'>
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule
+import * from dw::util::Values
+output application/json
+---
+{
+    openTelemetry: JSONLoggerModule::stringifyNonJSON(vars.OTEL_TRACE_CONTEXT default "") 
+}]]]></json-logger:content>
+		</json-logger:log-start>
+		<set-variable value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "poNumber": attributes.queryParams.poNumber default ""&#10;}]' doc:name="otel Tags" doc:id="fc585ebf-315a-48e5-8467-2923c5066171" variableName="openTelemetryTags" />
 		<set-variable value="#[attributes.queryParams.poNumber]" doc:name="poNumber" doc:id="00b1fce3-02e1-49d6-b745-4e4c54c71eed" variableName="poNumber"/>
 		<flow-ref doc:name="queryOrder" doc:id="5dba8858-bea6-4514-8911-de8354cb8b34" name="queryOrder"/>
 	</flow>
 	<flow name="get:\orders\(orderId)" doc:id="c30cd35a-d1f5-4099-bc4c-f5da735a2e8d" >
+		<json-logger:log-start doc:name="Log start" doc:id="faccbcf8-0735-40f7-8444-bac41fb15fe4" config-ref="JSON_Logger_Config" message='#["Get order orderId=" ++ attributes.uriParams.orderId]'>
+			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule
+import * from dw::util::Values
+output application/json
+---
+{
+    openTelemetry: JSONLoggerModule::stringifyNonJSON(vars.OTEL_TRACE_CONTEXT default "") 
+}]]]></json-logger:content>
+		</json-logger:log-start>
+		<set-variable value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "orderId": attributes.uriParams.orderId default ""&#10;}]' doc:name="otel Tags" doc:id="711b63d1-3c74-4813-b239-6af47b4a65d2" variableName="openTelemetryTags" />
 		<set-variable value="#[attributes.uriParams.orderId]" doc:name="orderId" doc:id="6672c9c4-9b68-4f2d-9232-98edb244fa6a" variableName="orderId"/>
 		<flow-ref doc:name="queryOrder" doc:id="513ef3fb-7755-47a1-8b49-13263bd7ac6e" name="queryOrder" />
 		<ee:transform doc:name="get Order" doc:id="ca9e06ba-76f4-484b-bcce-f2a6b9122ec5" >
