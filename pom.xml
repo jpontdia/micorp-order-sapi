@@ -27,8 +27,7 @@
 	</properties>
 
 	<dependencies>
-		<!-- Service Dependencies  -->
-		
+			
 		<!--RAML specification -->
 		<dependency>
 			<groupId>${restconnector.api.spec.group}</groupId>
