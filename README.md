@@ -1,7 +1,7 @@
 # Salesforce Order SAPI
 ![Powered by](https://img.shields.io/badge/Powered%20by-Mulesoft-blue.svg)
-  ![Unit test](https://gist.githubusercontent.com/jpontdia/ef8cdef1ff940eac4d8716f6361d2363/raw/micorp-order-sapi-ut.svg)
-  ![Code coverage](https://gist.githubusercontent.com/jpontdia/ef8cdef1ff940eac4d8716f6361d2363/raw/micorp-order-sapi-cc.svg)
+  ![Unit test](https://gist.githubusercontent.com/jpontdia/2f22ca2ddf1ba473d6e2cff61cc2fba9/raw/micorp-order-sapi-ut.svg)
+  ![Code coverage](https://gist.githubusercontent.com/jpontdia/2f22ca2ddf1ba473d6e2cff61cc2fba9/raw/micorp-order-sapi-cc.svg)
   ![Build and deploy](https://github.com/jpontdia/micorp-order-sapi/actions/workflows/build.yml/badge.svg)
 <br>
 
