@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:json-logger="http://www.mulesoft.org/schema/mule/json-logger" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+<mule 
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
 	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
 	xmlns="http://www.mulesoft.org/schema/mule/core" 
 	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" 
@@ -111,7 +112,6 @@ output application/json
 	</flow>
 
 	<flow name="get:\orders\(orderId)">
-		</json-logger:log-start>
 
 		<set-variable
 			value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "orderId": attributes.uriParams.orderId default ""&#10;}]' 
