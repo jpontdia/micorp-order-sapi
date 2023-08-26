@@ -96,15 +96,6 @@ output application/json
 	</flow>
 
 	<flow name="get:\orders">
-		<json-logger:log-start doc:name="Log start" doc:id="fb391f4e-2186-42c3-8669-55b31d438722" config-ref="JSON_Logger_Config" message='#["Get order by poNumber=" ++ attributes.queryParams.poNumber]'>
-			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule
-import * from dw::util::Values
-output application/json
----
-{
-    openTelemetry: JSONLoggerModule::stringifyNonJSON(vars.OTEL_TRACE_CONTEXT default "") 
-}]]]></json-logger:content>
-		</json-logger:log-start>
 		
 		<set-variable 
 			value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "poNumber": attributes.queryParams.poNumber default ""&#10;}]' 
@@ -120,14 +111,6 @@ output application/json
 	</flow>
 
 	<flow name="get:\orders\(orderId)">
-		<json-logger:log-start doc:name="Log start" doc:id="faccbcf8-0735-40f7-8444-bac41fb15fe4" config-ref="JSON_Logger_Config" message='#["Get order orderId=" ++ attributes.uriParams.orderId]'>
-			<json-logger:content><![CDATA[#[import modules::JSONLoggerModule
-import * from dw::util::Values
-output application/json
----
-{
-    openTelemetry: JSONLoggerModule::stringifyNonJSON(vars.OTEL_TRACE_CONTEXT default "") 
-}]]]></json-logger:content>
 		</json-logger:log-start>
 
 		<set-variable
