@@ -3,9 +3,9 @@
   ![Build and deploy](https://github.com/jpontdia/micorp-order-sapi/actions/workflows/build.yml/badge.svg)
 <br>
 
-Mulesoft service for creating orders in Salesforce using data from the Corporate Orders System
+Mulesoft service for creating orders in Salesforce using data from the Corporate Orders System.
 
-  > This project follows the standards defined in the Development Process Document in Anypoint Exchange
+  > This project follows the standards defined in the Development Process Document in Anypoint Exchange.
 
 ## Table of contents
 1. [Description](#description)
