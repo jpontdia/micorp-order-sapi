@@ -40,21 +40,21 @@
 		apiId="${api.id}"
 		ignoreBasePath="true"
 		doc:name="API Autodiscovery"
-		doc:id="f07765d0-bce9-4d44-9665-db88b286befe"
 		flowRef="api-main" />
 
 	<validation:config
 		name="Validation_Config"
-		doc:name="Validation Config"
-		doc:id="4af05c89-7dbf-40ea-903a-e1a0d1d7e820" />
+		doc:name="Validation Config" />
 
 	<import 
 		doc:name="Import" 
-		doc:id="fddb977b-d2f2-419c-bba8-4bcb2f37ccbf" 
 		file="global-configuration.xml" />
-		
+
 	<import 
 		doc:name="Import" 
-		doc:id="2e0de2c9-ad7c-4349-aa72-e24fd4ca7e5e" 
+		file="global-configuration-salesforce.xml" />	
+
+	<import 
+		doc:name="Import" 
 		file="global-error.xml" />
 </mule>
