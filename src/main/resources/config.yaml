@@ -32,17 +32,8 @@ messages:
   
 # All the below properties should be added as JVM arguments / Environment Properties.
 # Example: -Dsalesforce.user=myuser -Dsalesforce.password=mypassword
-
-# Salesfoce Connection    
-salesforce:
-  user: "myuser"
-  password: "mypassword"
-  token: "mytoken"
   
 #OpenTelemtry configuration
-otel:
-  collectorendpoint: "http://localhost:4317"
+#otel:
+#  collectorendpoint: "http://localhost:4317"
   
-# Logging - Provide next values as system properties
-# logzio.token: "MyToken"
-# logzio.url: "MyUrl"
