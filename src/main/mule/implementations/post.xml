@@ -22,7 +22,7 @@
 		<logger 
 			level="INFO" 
 			doc:name="start" 
-			message="#[&quot;Create order for poNumber=&quot; ++ payload.poNumber]"
+			message="#['Create order for poNumber=' ++ payload.poNumber]"
 			category="app"/>
 			
 		<set-variable 
