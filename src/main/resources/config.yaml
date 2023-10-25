@@ -1,7 +1,7 @@
 # Environment where the service is running
 env: local
 
-# Service listener configuration
+# Listening port of the serivce
 http:
   port: "8081"
 
@@ -16,24 +16,15 @@ api:
   artifact: "${restconnector.api.spec.artifact}"
   version: "${restconnector.api.spec.version}"
   spec: "resource::${api.group}:${api.artifact}:${api.version}:raml:zip:api.raml"
-  id: "17904768"
+  id: "0"
+
+# Open Telemetry configuration
+otel:
+  servicename: "${project.name}:${project.version}"
   
-# Service messages
-messages:
-  customer-doesnt-exist-relations: "Customer does not exist or has relations with other resources"
-  backend-error: "There was a problem while trying to access the backend repository"
-  customer-error: "There was a problme while trying to create the Customer"
-  apikit-400: "Bad request"
-  apikit-404: "Resource not found"
-  apikit-405: "Method not allowed"
-  apikit-406: "Not acceptable"
-  apikit-415: "Unsupported media type"
-  apikit-501: "Not Implemented"
-  
-# All the below properties should be added as JVM arguments / Environment Properties.
-# Example: -Dsalesforce.user=myuser -Dsalesforce.password=mypassword
-  
-#OpenTelemtry configuration
-#otel:
-#  collectorendpoint: "http://localhost:4317"
+# Components to configure:
+# - Salesforce connector
+# - OpenTelemtry connector
+# - Logzio (logging platform)
+# - Mulesoft Gatekeeper
   

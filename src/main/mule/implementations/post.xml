@@ -19,8 +19,16 @@
 	">
 
 	<flow name="post:\orders">
+		<logger 
+			level="INFO" 
+			doc:name="start" 
+			message="#[&quot;Create order for poNumber=&quot; ++ payload.poNumber]"
+			category="app"/>
+			
 		<set-variable 
-			value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "poNumber": payload.poNumber default ""&#10;}]' doc:name="otel Tags" doc:id="4f97c79e-38fb-427f-9faa-11b5d7d9eeb8" variableName="openTelemetryTags" />
+			value='#[%dw 2.0&#10;output application/java&#10;---&#10;{&#10;    "poNumber": payload.poNumber default ""&#10;}]'
+			doc:name="otel Tags" 
+			variableName="openTelemetryTags" />
 		
 		<set-variable 
 			value='#[attributes.requestUri ++ "/"]' 
@@ -73,7 +81,7 @@ output application/json
 			doc:id="c07ab925-a396-4486-90b7-16cca26230cc" 
 			expression="#[payload.successful == true]"/>
 		
-		<ee:transform doc:name="Set Header" doc:id="4edb2256-18a6-47cc-807e-d3a5205c50eb">
+		<ee:transform doc:name="Set Header">
 			<ee:message>
 				<ee:set-payload><![CDATA[%dw 2.0
 output application/java
