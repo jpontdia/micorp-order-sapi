@@ -1,0 +1,17 @@
+%dw 2.0
+
+type auto_9508f5fc_7ee2_4845_9a0d_00718f6893e3_Input_Variables_payloadBackup = {
+  signatureRequiredFlag: Boolean, 
+  shipInstructions: String, 
+  orderId?: String, 
+  giftWrapMessage: String, 
+  customerId: String, 
+  subTotal: Number, 
+  giftWrapFlag: Boolean, 
+  poNumber: String, 
+  currencyCode: String, 
+  email: String, 
+  _?: Any
+} {"description": "Order from Corporate System",
+"label": "Order"}
+
